@@ -1,23 +1,18 @@
 const bcrypt = require('bcrypt');
 const db = require('./banco.js');
 
-db.exec(`
-    CREATE TABLE IF NOT EXISTS usuarios (
-        id         INTEGER PRIMARY KEY AUTOINCREMENT,
-        usuario    TEXT UNIQUE NOT NULL,
-        senha_hash TEXT NOT NULL
-    )
-`);
-
 async function criarUsuarios() {
     const usuarios = [
-        { usuario: 'enzo', senha: '123456' },
+        { usuario: 'diego', senha: '1234' },
+        { usuario: 'aluno', senha: 'senha' },
+        { usuario: 'enzo', senha: '123456' }
     ];
 
     for (const u of usuarios) {
         const hash = await bcrypt.hash(u.senha, 10);
         db.prepare(
-            'INSERT OR REPLACE INTO usuarios (usuario, senha_hash) VALUES (?, ?)'
+            `INSERT INTO usuarios (usuario, senha_hash) VALUES (?, ?)
+             ON CONFLICT(usuario) DO UPDATE SET senha_hash = excluded.senha_hash`
         ).run(u.usuario, hash);
     }
 

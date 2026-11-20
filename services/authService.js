@@ -1,16 +1,24 @@
 const bcrypt = require('bcrypt');
-const db = require('../banco.js');
+const repository = require('../repositories/usuariosRepository.js');
 
-async function autenticar(usuario, senha) {
-    const u = db.prepare(
-        'SELECT * FROM usuarios WHERE usuario = ?'
-    ).get(usuario);
-
-    if (u === undefined) {
-        return false;
+async function login(usuario, senha) {
+    if (typeof usuario !== 'string' || typeof senha !== 'string') {
+        return { invalido: true };
     }
 
-    return await bcrypt.compare(senha, u.senha_hash);
+    const encontrado = repository.buscarPorUsuario(usuario);
+
+    if (encontrado === undefined) {
+        return { invalido: true };
+    }
+
+    const confere = await bcrypt.compare(senha, encontrado.senha_hash);
+
+    if (!confere) {
+        return { invalido: true };
+    }
+
+    return { usuario: { id: encontrado.id, usuario: encontrado.usuario } };
 }
 
-module.exports = { autenticar };
+module.exports = { login };
