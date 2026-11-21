@@ -1,3 +1,15 @@
-Enzo, seu repositório fechou em 1,4 de 2,5. Na aula 2, a API passou nos 10 testes no commit b23b3ab, de 18/09. Na aula 3, a migração para SQLite passou em 7 de 7 testes e em 0 de 3 exercícios (melhor resultado no commit 0e7d15c, de 16/10). Faltou: nos exercícios, o GET /treinos/total; o filtro ?minimo=; e a ordenação do maior para o menor. Na aula 4, 8 de 8 testes passaram no commit 0e7d15c, de 16/10. A regra dos 180 minutos, que devia estar em validarTreino no treinosService.js, não foi encontrada. A aula 5 não foi entregue. A aula 6 não foi entregue: não há bcrypt no package.json, nem criarUsuarios.js, e a senha continua em texto puro. Para entregar, falta instalar o bcrypt, gerar o hash no criarUsuarios.js, guardar só o senha_hash e comparar com await bcrypt.compare no authService.
+Enzo, sua nota do repositório ficou em 3,0 de 3,0.
 
-Se tiver dúvida, fala na próxima aula.
+Olhei todos os seus commits até 20/11 às 23h59 e fiquei com o melhor resultado de cada aula, então o que você reentregou já entrou na conta. Cada aula vale um quinto da nota, metade pela entrega e metade pelos testes que passaram.
+
+Na aula 2 sua API passou nos 10 testes, no commit 2302c02 de 20/11.
+
+Na aula 3 passaram 7 de 7 testes do SQLite, no commit f886a04 de 20/11. Os 3 exercícios (total, filtro mínimo e ordenação) funcionaram.
+
+Na aula 4 passaram 8 de 8 testes, no commit 0e7d15c de 16/10. A regra dos 180 minutos está no treinosService.js.
+
+Na aula 5 passaram 7 de 8 testes, no commit 8d1f395 de 20/11. Os testes mostram que as rotas de treino não pedem login.
+
+Na aula 6 passaram 10 de 10 testes, no commit 2302c02 de 20/11. O testes.http com login, perfil e logout está lá.
+
+As notas estão fechadas. Se tiver dúvida, fala na próxima aula.
