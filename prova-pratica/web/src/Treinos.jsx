@@ -11,11 +11,6 @@ export default function Treinos({ onSessaoExpirada }) {
   const [nome, setNome] = useState('');
   const [duracao, setDuracao] = useState('');
 
-  // ---------------------------------------------------------------
-  // PRONTO: busca de dados (useEffect + fetch). Isso e conteudo das
-  // semanas 7 e 8 de Inovacao e vem pronto. Leia, entenda o fluxo
-  // (tela -> fetch -> rota -> camadas -> SQLite) e NAO precisa mexer.
-  // ---------------------------------------------------------------
   async function carregar() {
     try {
       const lista = await chamar('GET', '/treinos');
@@ -37,8 +32,6 @@ export default function Treinos({ onSessaoExpirada }) {
     carregar();
   }, []);
 
-  // PRONTO: trata a resposta de uma acao que exige login.
-  // Devolve true se deu certo.
   function conferir(r, rota) {
     if (r.status === 401) {
       onSessaoExpirada();
@@ -52,7 +45,6 @@ export default function Treinos({ onSessaoExpirada }) {
     return true;
   }
 
-  // PRONTO: acoes que falam com a API. A tela so chama estas funcoes.
   async function enviarNovoTreino() {
     const r = await chamar('POST', '/treinos', {
       nome: nome,
@@ -79,32 +71,47 @@ export default function Treinos({ onSessaoExpirada }) {
     }
   }
 
-  // ---------------------------------------------------------------
-  // TAREFA 6: validacao do formulario "Novo treino", ANTES de chamar
-  // enviarNovoTreino(). Regras:
-  //   - nome nao pode ser vazio (trim())
-  //   - duracao precisa ser um numero inteiro de 1 a 180
-  // Em caso de problema: setErro('texto') e NAO chame enviarNovoTreino.
-  // ---------------------------------------------------------------
+  // TAREFA 6: Validação antes de enviar
   function aoEnviar(evento) {
     evento.preventDefault();
+
+    if (!nome.trim()) {
+      setErro('O nome do treino não pode ser vazio.');
+      return;
+    }
+
+    const duracaoNum = Number(duracao);
+    if (!Number.isInteger(duracaoNum) || duracaoNum < 1 || duracaoNum > 180) {
+      setErro('A duração precisa ser um número inteiro entre 1 e 180 minutos.');
+      return;
+    }
+
+    setErro('');
     enviarNovoTreino();
   }
 
   return (
     <>
-      {/* TAREFA 5: deixe os dois campos CONTROLADOS (value + onChange,
-          igual ao Login). Os estados nome e duracao ja existem la em cima. */}
+      {/* TAREFA 5: Campos controlados */}
       <form className="cartao" onSubmit={aoEnviar}>
         <h2>Novo treino</h2>
         <div className="linha-form">
           <div>
             <label htmlFor="nome">Nome</label>
-            <input id="nome" />
+            <input
+              id="nome"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+            />
           </div>
           <div>
             <label htmlFor="duracao">Duração (min)</label>
-            <input id="duracao" type="number" />
+            <input
+              id="duracao"
+              type="number"
+              value={duracao}
+              onChange={(e) => setDuracao(e.target.value)}
+            />
           </div>
           <button type="submit">Adicionar</button>
         </div>
@@ -126,15 +133,22 @@ export default function Treinos({ onSessaoExpirada }) {
 
         {carregando && <p className="suave">Carregando...</p>}
 
-        {/* TAREFA 7: renderizacao condicional do estado vazio.
-            Quando NAO esta carregando e a lista esta vazia, mostre
-            o texto "Nenhum treino ainda. Cadastre o primeiro acima."
-            (className="suave"). */}
+        {/* TAREFA 7: Estado vazio */}
+        {!carregando && treinos.length === 0 && (
+          <p className="suave">Nenhum treino ainda. Cadastre o primeiro acima.</p>
+        )}
 
-        {/* TAREFA 8: a lista. Use treinos.map(...) para gerar um
-            <CartaoTreino /> por treino, com key={t.id}, passando as props
-            treino, onConcluir={concluir} e onApagar={apagar}. */}
-        <ul className="lista"></ul>
+        {/* TAREFA 8: Lista de treinos */}
+        <ul className="lista">
+          {treinos.map((t) => (
+            <CartaoTreino
+              key={t.id}
+              treino={t}
+              onConcluir={concluir}
+              onApagar={apagar}
+            />
+          ))}
+        </ul>
       </section>
     </>
   );
